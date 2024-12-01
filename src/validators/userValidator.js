@@ -16,6 +16,7 @@ export const userSchema = {
                         zip: { type: "string", minLength: 1 },
                     },
                 },
+                additionalProperties: false,
             },
         },
     },

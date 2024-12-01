@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/errors.js";
+import fp from "fastify-plugin";
+import dotenv from "dotenv";
 
-export default async function authMiddleware(fastify) {
-    fastify.decorate('authenticate', async (request, reply, done) => {
+dotenv.config();
+
+async function authMiddleware(fastify) {
+    fastify.decorate('authenticate', async (request, reply) => {
         try {
             const token = request.headers.authorization?.replace('Bearer ', '');
             if (!token) { 
@@ -10,16 +14,17 @@ export default async function authMiddleware(fastify) {
             }
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             request.user = decoded;
-            done();
         } catch (error) {
             reply.code(401).send({ error: 'Invalid or expired token'});
         }
     });
 
-    fastify.decorate('requireAdmin', async (request, reply, done) => {
+    fastify.decorate('requireAdmin', async (request, reply) => {
+        console.log(request.user);
         if (request.user.role !== 'admin') {
             reply.code(403).send({ error: 'Forbidden'});
         }
-        done();
     });
 } 
+
+export default fp(authMiddleware);

@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const cartSchema = new Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
     items:[{
         product: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'Product',
             required: true,
         },

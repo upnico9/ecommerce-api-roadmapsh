@@ -2,11 +2,17 @@ import Product from "../models/products.js";
 
 export class ProductsService {
     static async searchProducts(query) {
-        return Product.find({ $text: { $search: query } }, { _id: 0, __v: 0 });
+        const products = await Product.find({}, { id: 0, __v: 0 });
+
+        return products
     }
 
     static async getProductById(id) {
-        return Product.findOne({ id }, { _id: 0, __v: 0 });
+        const product = await Product.findById(_id, { id: 0, __v: 0 });
+        if (!product) {
+            throw new CustomError("Product not found", 404);
+        }
+        return product;
     }
 
     static async createProduct(productData) {

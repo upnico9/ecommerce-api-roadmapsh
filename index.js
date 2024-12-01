@@ -8,21 +8,23 @@ import cartRoutes from "./src/routes/cart.js";
 
 dotenv.config();
 
+
 const fastify = Fastify({
-	logger: true,
+    logger: true,
 });
 
 
 async function bootstrap() {
     try { 
+        
         await Database.connect();
-
+        await fastify.register(authMiddleware);
         // Ping route
         fastify.get('/ping', async (request, reply) => {
             return { message: 'Welcome to the API' };
         });
 
-        fastify.register(authMiddleware);
+        
         fastify.register(cartRoutes, { prefix: '/api/cart' });
         fastify.register(productsRoutes, { prefix: '/api/products' });
         fastify.register(userRoutes, { prefix: '/api/users' });

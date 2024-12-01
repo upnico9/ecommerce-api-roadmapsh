@@ -11,19 +11,19 @@ async function productsRoutes(fastify, options) {
     });
 
     fastify.post('/', {
-        onRequest: [fastify.isAdmin],
+        onRequest: [fastify.authenticate, fastify.requireAdmin],
         schema: productSchema.createProduct,
         handler: ProductsController.createProduct,
     });
 
     fastify.put('/:id', {
-        onRequest: [fastify.isAdmin],
+        onRequest: [fastify.authenticate, fastify.requireAdmin],
         schema: productSchema.updateProduct,
         handler: ProductsController.updateProduct,
     });
 
     fastify.delete('/:id', {
-        onRequest: [fastify.isAdmin],
+        onRequest: [fastify.authenticate, fastify.requireAdmin],
         handler: ProductsController.deleteProduct,
     });
 }

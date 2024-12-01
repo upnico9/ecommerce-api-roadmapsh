@@ -1,6 +1,9 @@
 import User from "../models/users.js";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../utils/errors.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class UserService {
 
@@ -12,7 +15,7 @@ export class UserService {
         const user = new User(userData);
         await user.save();
 
-        const token = this.generateToken(user._id);
+        const token = this.generateToken(user._id, user.role);
         return { user, token };
     }
 
@@ -27,12 +30,13 @@ export class UserService {
             throw new CustomError("Invalid password", 400);
         }
     
-        const token = this.generateToken(user._id);
+        const token = this.generateToken(user);
         return { user: this.sanitizeUser(user), token };
     }
 
     static async getProfile(userId) {
         const user = await User.findById(userId);
+        console.log(user);
         if (!user) {
             throw new CustomError("User not found", 404);
         }
@@ -57,7 +61,7 @@ export class UserService {
     }
 
     static generateToken(user) {
-        return jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+        return jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "24h" });
     }
 
     static sanitizeUser(user) {

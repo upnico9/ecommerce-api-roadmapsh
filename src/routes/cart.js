@@ -16,11 +16,11 @@ export default function cartRoutes(fastify, options) {
     fastify.put('/', {
         onRequest: [fastify.authenticate],
         schema: cartSchema.updateCart,
-        handler: CartController.updateCart,
+        handler: CartController.updateQuantity,
     });
 
     fastify.delete('/', {
         onRequest: [fastify.authenticate],
-        handler: CartController.deleteCart,
+        handler: CartController.deleteItem,
     });
 }

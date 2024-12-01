@@ -22,7 +22,7 @@ export class UserController {
 
     static async getProfile(request, reply) {
         try {
-            const userId = request.user.id;
+            const userId = request.user.userId;
             const user = await UserService.getProfile(userId);
             reply.code(200).send(user);
         } catch (error) {
