@@ -16,7 +16,6 @@ export class Database {
             await mongoose.connect(process.env.MONGO_DB_URI, options);
             console.log('📦 Connected to MongoDB successfully');
 
-            // Handle database events
             mongoose.connection.on('error', (err) => {
                 console.error('MongoDB connection error:', err);
             });
@@ -25,7 +24,6 @@ export class Database {
                 console.warn('MongoDB disconnected');
             });
 
-            // Handle application termination
             process.on('SIGINT', async () => {
                 await mongoose.connection.close();
                 console.log('MongoDB connection closed through app termination');

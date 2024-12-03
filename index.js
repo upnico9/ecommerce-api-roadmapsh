@@ -5,6 +5,10 @@ import authMiddleware from "./src/middleware/auth.js";
 import productsRoutes from "./src/routes/products.js";
 import userRoutes from "./src/routes/users.js";
 import cartRoutes from "./src/routes/cart.js";
+import orderRoutes from "./src/routes/orders.js";
+import webhookRoutes from "./src/routes/stripeWebhook.js";
+import formbody from "@fastify/formbody";
+import cors from "@fastify/cors";
 
 dotenv.config();
 
@@ -18,8 +22,18 @@ async function bootstrap() {
     try { 
         
         await Database.connect();
+
+        await fastify.register(cors, {
+            origin: "*", 
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+        });
+        await fastify.register(formbody, {
+            addHook: true,
+            raw: true
+        });
         await fastify.register(authMiddleware);
-        // Ping route
+
+        
         fastify.get('/ping', async (request, reply) => {
             return { message: 'Welcome to the API' };
         });
@@ -28,6 +42,8 @@ async function bootstrap() {
         fastify.register(cartRoutes, { prefix: '/api/cart' });
         fastify.register(productsRoutes, { prefix: '/api/products' });
         fastify.register(userRoutes, { prefix: '/api/users' });
+        fastify.register(orderRoutes, { prefix: '/api/orders' });
+        fastify.register(webhookRoutes, { prefix: '/api/webhook' });
         const port = process.env.PORT || 3000;
         fastify.listen({ port, host: '0.0.0.0' });
         console.log(`🚀 Server is running on port ${port}`);

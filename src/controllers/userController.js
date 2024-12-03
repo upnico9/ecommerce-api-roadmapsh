@@ -4,7 +4,7 @@ export class UserController {
     static async registerUser(request, reply) {
         try {
             const result = await UserService.registerUser(request.body);
-            reply.code(201).send(user);
+            reply.code(201).send(result);
         } catch (error) {
             reply.code(error.statusCode || 500).send({ error: error.message });
         }

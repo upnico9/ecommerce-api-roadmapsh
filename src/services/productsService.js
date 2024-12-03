@@ -8,7 +8,7 @@ export class ProductsService {
     }
 
     static async getProductById(id) {
-        const product = await Product.findById(_id, { id: 0, __v: 0 });
+        const product = await Product.findById(id, { id: 0, __v: 0 });
         if (!product) {
             throw new CustomError("Product not found", 404);
         }
